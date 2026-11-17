@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thing Dem Work – Lyric Export</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+:root{--red:#c81020;--gold:#d4af37;--white:#f5f0e6;--black:#080808;--card:#141414}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--black);color:var(--white);font-family:Arial,sans-serif;padding:calc(env(safe-area-inset-top,0px) + 20px) 16px calc(env(safe-area-inset-bottom,0px) + 30px)}
+h1{font-family:'Anton',Impact,sans-serif;font-size:34px;letter-spacing:.05em;text-shadow:3px 3px 0 var(--red)}
+h1 span{color:var(--gold)}
+#status{margin:10px 0 20px;font-size:14px;opacity:.85}
+.card{background:var(--card);border-left:5px solid var(--gold);padding:14px;margin-bottom:18px}
+.card h2{font-family:'Anton',Impact,sans-serif;font-size:22px;letter-spacing:.05em;color:var(--gold)}
+.card p{font-size:13px;opacity:.75;margin:4px 0 10px}
+textarea{width:100%;height:170px;background:#000;color:var(--white);border:1px solid #333;font-family:monospace;font-size:12px;padding:8px}
+.btns{display:flex;gap:10px;margin-top:10px}
+button{flex:1;font-family:'Anton',Impact,sans-serif;font-size:17px;letter-spacing:.08em;padding:12px;border:none;cursor:pointer;background:var(--gold);color:var(--black)}
+button.alt{background:var(--red);color:var(--white)}
+</style>
+</head>
+<body>
+<h1>THING DEM WORK <span>EXPORT</span></h1>
+<div id="status"></div>
+<div id="cards"></div>
+
+<script src="times.js"></script>
+<script>
+const ARTIST = "BAZRAGOD";
+const TITLE = "Thing Dem Work";
+
+const SHEET = [
+"Never fraid fi kill",
+"Never fraid fi shoot youth",
+"Chat dem a chat now a gap dem a gap",
+"One by one dem a drop dem a drop!",
+"Never fraid fi kill",
+"Never fraid fi",
+"",
+"Fi Mek di thing dem wooooork",
+"Brawling wi a lock loose ends",
+"So when yo si di ends caaaaalm",
+"Killaz venom been charge",
+"So any foul play a bay violence",
+"Di Mac 90 a push mileage",
+"Like roof dem head gooooooone",
+"Haffi show dem who in charge",
+"Yeah",
+"",
+"Weh dem did a plan now it exposing",
+"Dem nuh whaa si wi neck frozen",
+"Dem nuh whaa si wi have clothing",
+"Wi lif it up like gal clothing",
+"Yo mumma bawl casket clothing",
+"So yo nuh tuff wid posing",
+"A Mek chat wha yo imposing",
+"Yo skin bun like acid dousing",
+"Yo cyaa touch none a god chosen",
+"Di triangle eagle golden",
+"Suh yo know seh yo get scolded scolded scooooolded",
+"",
+"We Mek di thing dem work",
+"Brawling wi a lock loose ends",
+"So when yo si di ends caaaaaaaalm",
+"Killaz venom been charge",
+"So any foul play a bay violence",
+"Di Mac 90 a push mileage",
+"Like roof dem head goooooooooone",
+"Haffi show dem who in charge",
+"",
+"The Mac 90 scope be searching",
+"Mi split e tripod like curtain",
+"Bwoy dead mi seet mi certain",
+"Mi paranoid the wounds dem hurting",
+"Enemy pre fi kill mi first him",
+"The grung hot now a bare dirting",
+"Marrow deh a floor like skirting",
+"The mini Glock wid the blue round tin",
+"The mini Glock wid the blue roooound tin",
+"So yo know seh dem get scoooooooooooooooooooooood",
+"",
+"We Mek di thing dem woooork",
+"Brawling wi a lock loose ends",
+"So when yo si di ends caaaaaalm",
+"Killaz venom been charge",
+"So any foul play a bay violence",
+"Di Mac 90 a push mileage",
+"Like roof dem head goooooooone",
+"Haffi show dem who in charge",
+"",
+"Weh dem did a plan now it exposing",
+"Dem nuh whaa si wi have clothing",
+"Dem nuh whaa si wi",
+"Wi lif it up"
+];
+
+const LINES = SHEET.filter(l => l !== "");
+const T = (typeof TIMES !== 'undefined' && Array.isArray(TIMES)) ? TIMES : [];
+const timed = Math.min(T.length, LINES.length);
+
+document.getElementById('status').textContent = timed === LINES.length
+  ? `All ${LINES.length} lines timed ✓`
+  : `${timed} of ${LINES.length} lines timed. Finish SYNC LYRICS on the lyric page for full SRT/LRC files. Plain lyrics work now.`;
+
+function endOf(i) {
+  const next = T[i + 1];
+  const cap = T[i] + 8;
+  let e = (next !== undefined && i + 1 < timed) ? Math.min(next, cap) : T[i] + 4;
+  return Math.max(e, T[i] + 0.5);
+}
+
+function srtTime(s) {
+  const ms = Math.round(s * 1000);
+  const h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60,
+        sec = Math.floor(ms / 1000) % 60, r = ms % 1000;
+  const p = (n, l = 2) => String(n).padStart(l, '0');
+  return `${p(h)}:${p(m)}:${p(sec)},${p(r, 3)}`;
+}
+
+function lrcTime(s) {
+  const m = Math.floor(s / 60), sec = (s % 60).toFixed(2).padStart(5, '0');
+  return `[${String(m).padStart(2, '0')}:${sec}]`;
+}
+
+function shortTime(s) {
+  const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+  return `${m}:${String(sec).padStart(2, '0')}`;
+}
+
+function makeSRT() {
+  let out = [];
+  for (let i = 0; i < timed; i++) {
+    out.push(`${i + 1}\n${srtTime(T[i])} --> ${srtTime(endOf(i))}\n${LINES[i]}\n`);
+  }
+  return out.join('\n');
+}
+
+function makeLRC() {
+  let out = [`[ar:${ARTIST}]`, `[ti:${TITLE}]`, `[by:${ARTIST}]`];
+  for (let i = 0; i < timed; i++) {
+    out.push(lrcTime(T[i]) + LINES[i]);
+    const e = endOf(i), next = T[i + 1];
+    if (next === undefined || i + 1 >= timed || e < next - 0.05) out.push(lrcTime(e));
+  }
+  return out.join('\n');
+}
+
+function makeTXT() {
+  return `${TITLE} – ${ARTIST}\n\n` + SHEET.join('\n') + `\n\nWritten by ${ARTIST}`;
+}
+
+function makeList() {
+  let out = [`${TITLE} – ${ARTIST}`, ''];
+  for (let i = 0; i < timed; i++) out.push(`${shortTime(T[i])} – ${LINES[i]}`);
+  out.push('', `Written by ${ARTIST}`);
+  return out.join('\n');
+}
+
+function save(name, text) {
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url; link.download = name;
+  document.body.appendChild(link); link.click(); link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+}
+
+const formats = [
+  { title: 'YouTube Studio (SRT)', note: 'Studio → Subtitles → Add → Upload file → With timing.', file: 'thing-dem-work.srt', make: makeSRT, needsTime: true },
+  { title: 'Lyric Sites / Players (LRC)', note: 'Standard synced-lyrics format.', file: 'thing-dem-work.lrc', make: makeLRC, needsTime: true },
+  { title: 'Plain Lyrics (TXT)', note: 'Clean lyric sheet with your verse/hook blocks.', file: 'thing-dem-work-lyrics.txt', make: makeTXT, needsTime: false },
+  { title: 'Timed List (TXT)', note: 'Quick reference sheet with every line\'s start time.', file: 'thing-dem-work-timed.txt', make: makeList, needsTime: true }
+];
+
+const cards = document.getElementById('cards');
+formats.forEach(f => {
+  const text = (f.needsTime && !timed) ? '' : f.make();
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<h2>${f.title}</h2><p>${f.note}</p><textarea readonly></textarea>
+    <div class="btns"><button class="copy">COPY</button><button class="alt saveb">SAVE FILE</button></div>`;
+  const ta = card.querySelector('textarea');
+  ta.value = text || 'Sync your lyrics first to generate this.';
+  card.querySelector('.copy').onclick = async e => {
+    if (!text) return;
+    try { await navigator.clipboard.writeText(text); }
+    catch (err) { ta.select(); document.execCommand('copy'); }
+    e.target.textContent = 'COPIED ✓';
+  };
+  card.querySelector('.saveb').onclick = () => { if (text) save(f.file, text); };
+  cards.appendChild(card);
+});
+</script>
+</body>
+</html>
