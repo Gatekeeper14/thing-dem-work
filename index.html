@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BAZRAGOD – Thing Dem Work</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+:root{--red:#c81020;--dred:#6e0810;--gold:#d4af37;--white:#f5f0e6;--black:#080808}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--black);overflow:hidden;font-family:'Anton',Impact,'Arial Black',sans-serif;color:var(--white);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#bg{position:fixed;inset:-40px;background:var(--black) url(cover.jpg) center/cover no-repeat;filter:blur(14px) brightness(.25);z-index:0}
+#shards{position:fixed;inset:0;overflow:hidden;z-index:1}
+.shard{position:absolute;opacity:.5;clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%);animation:spin linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#stage{position:fixed;inset:0;z-index:2}
+#stage.shake{animation:shake .35s}
+@keyframes shake{0%,100%{transform:none}20%{transform:translate(-1.2vw,.6vh)}40%{transform:translate(1vw,-.8vh)}60%{transform:translate(-.6vw,.4vh)}80%{transform:translate(.4vw,0)}}
+.line{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.wrap{position:relative;padding:4vh 6vw;max-width:92vw}
+.bar{position:absolute;inset:0 -4vw;background:var(--dred);transform:skewX(-14deg) scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.9,.2,1)}
+.rule{position:absolute;height:max(4px,.9vh);width:60%;background:var(--gold);transform:scaleX(0);transition:transform .4s .1s cubic-bezier(.2,.9,.2,1)}
+.rule.t{top:-2.2vh;left:-2vw;transform-origin:left}
+.rule.b{bottom:-2.2vh;right:-2vw;transform-origin:right}
+.in .bar{transform:skewX(-14deg) scaleX(1)}
+.in .rule{transform:scaleX(1)}
+.out .bar{transform:skewX(-14deg) translateX(130%);transition:transform .35s ease-in}
+.out .rule{transform:scaleX(0);transition:transform .25s}
+.out .text{opacity:0;transform:translateX(8vw);transition:all .3s ease-in}
+.text{position:relative;text-align:center;font-size:min(9vw,13vh);line-height:1.1;text-transform:uppercase;letter-spacing:.02em}
+.w{display:inline-block;opacity:0;text-shadow:.06em .06em 0 var(--red);animation:drop .32s cubic-bezier(.2,.9,.3,1.3) forwards,flash .6s forwards;animation-delay:var(--d),var(--d)}
+.w.st{animation:drop .32s cubic-bezier(.2,.9,.3,1.3) forwards,flash .6s forwards,stretch 1.4s ease-out forwards;animation-delay:var(--d),var(--d),var(--d)}
+.hook .w{animation-name:drop,flashgold}
+.hook .w.st{animation-name:drop,flashgold,stretch}
+@keyframes drop{from{opacity:0;transform:translateY(-.6em) scale(1.3)}to{opacity:1;transform:none}}
+@keyframes flash{0%,35%{color:var(--gold)}100%{color:var(--white)}}
+@keyframes flashgold{0%,35%{color:var(--white)}100%{color:var(--gold)}}
+@keyframes stretch{from{letter-spacing:.02em}to{letter-spacing:.14em}}
+#title,#endcard{position:fixed;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vh;text-align:center;pointer-events:none}
+#title .artist,#endcard .small{color:var(--gold);font-size:min(6vw,8vh);letter-spacing:.15em;transform:translateX(-60vw);opacity:0;transition:all .8s cubic-bezier(.2,.9,.2,1)}
+#title .name,#endcard .big{font-size:min(11vw,17vh);text-shadow:.06em .06em 0 var(--red);transform:translateX(60vw);opacity:0;transition:all .8s cubic-bezier(.2,.9,.2,1)}
+#title .grule,#endcard .grule{height:max(5px,1vh);width:60vw;background:var(--gold);transform:scaleX(0);transition:transform .9s .2s}
+#title.show .artist,#title.show .name,#endcard.show .small,#endcard.show .big{transform:none;opacity:1}
+#title.show .grule,#endcard.show .grule{transform:scaleX(1)}
+#prog{position:fixed;left:0;bottom:0;height:max(4px,.7vh);width:0;background:var(--gold);z-index:4}
+.overlay{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center;gap:3vh;padding:env(safe-area-inset-top,0px) 6vw env(safe-area-inset-bottom,0px);text-align:center}
+.overlay.show{display:flex}
+#start{background:rgba(8,8,8,.75)}
+button{font-family:inherit;font-size:min(6vw,7vh);letter-spacing:.1em;padding:1.6vh 8vw;border:none;cursor:pointer;color:var(--black);background:var(--gold);transform:skewX(-10deg)}
+button.alt{background:var(--red);color:var(--white)}
+.note{font-family:Arial,sans-serif;font-size:14px;opacity:.8;max-width:520px;line-height:1.4}
+#sync{justify-content:space-between;padding-top:calc(env(safe-area-inset-top,0px) + 3vh);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 3vh)}
+#syncTop{background:rgba(8,8,8,.85);padding:2vh 4vw;border-left:6px solid var(--gold);width:100%}
+#count{color:var(--gold);font-size:18px;letter-spacing:.1em}
+#nextTxt{font-size:min(6vw,7vh);margin-top:1vh}
+#syncBtns{display:flex;gap:4vw}
+#out{background:rgba(8,8,8,.95)}
+#outTxt{width:100%;max-width:700px;height:30vh;font-family:monospace;font-size:13px;background:#111;color:var(--white);border:2px solid var(--gold);padding:10px}
+#paused{position:fixed;top:calc(env(safe-area-inset-top,0px) + 2vh);right:4vw;z-index:9;color:var(--gold);letter-spacing:.1em;display:none}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div id="shards"></div>
+<div id="stage"></div>
+<div id="title"><div class="artist">BAZRAGOD</div><div class="name">THING DEM WORK</div><div class="grule"></div></div>
+<div id="endcard"><div class="small">WRITTEN BY BAZRAGOD</div><div class="big">PARISH 14 NATION</div><div class="grule"></div></div>
+<div id="prog"></div>
+<div id="paused">PAUSED · TAP</div>
+
+<div id="start" class="overlay show">
+  <button id="playBtn">▶ PLAY</button>
+  <button id="syncBtn" class="alt">SYNC LYRICS</button>
+  <div class="note" id="startNote"></div>
+</div>
+
+<div id="sync" class="overlay">
+  <div id="syncTop"><div id="count"></div><div id="nextTxt"></div><div class="note">Tap anywhere the moment this line starts</div></div>
+  <div id="syncBtns"><button id="undoBtn" class="alt">UNDO</button><button id="doneBtn">DONE</button></div>
+</div>
+
+<div id="out" class="overlay">
+  <div class="note">Copy this, open <b>times.js</b> in GitHub, replace everything in it, then commit.</div>
+  <textarea id="outTxt" readonly></textarea>
+  <button id="copyBtn">COPY</button>
+  <button id="previewBtn" class="alt">PREVIEW</button>
+</div>
+
+<audio id="a" src="song.mp3" preload="auto"></audio>
+<script src="times.js"></script>
+<script>
+const LYRICS = [
+"Never fraid fi kill",
+"Never fraid fi shoot youth",
+"Chat dem a chat now a gap dem a gap",
+"One by one dem a drop dem a drop!",
+"Never fraid fi kill",
+"Never fraid fi",
+"Fi Mek di thing dem wooooork",
+"Brawling wi a lock loose ends",
+"So when yo si di ends caaaaalm",
+"Killaz venom been charge",
+"So any foul play a bay violence",
+"Di Mac 90 a push mileage",
+"Like roof dem head gooooooone",
+"Haffi show dem who in charge",
+"Yeah",
+"Weh dem did a plan now it exposing",
+"Dem nuh whaa si wi neck frozen",
+"Dem nuh whaa si wi have clothing",
+"Wi lif it up like gal clothing",
+"Yo mumma bawl casket clothing",
+"So yo nuh tuff wid posing",
+"A Mek chat wha yo imposing",
+"Yo skin bun like acid dousing",
+"Yo cyaa touch none a god chosen",
+"Di triangle eagle golden",
+"Suh yo know seh yo get scolded scolded scooooolded",
+"We Mek di thing dem work",
+"Brawling wi a lock loose ends",
+"So when yo si di ends caaaaaaaalm",
+"Killaz venom been charge",
+"So any foul play a bay violence",
+"Di Mac 90 a push mileage",
+"Like roof dem head goooooooooone",
+"Haffi show dem who in charge",
+"The Mac 90 scope be searching",
+"Mi split e tripod like curtain",
+"Bwoy dead mi seet mi certain",
+"Mi paranoid the wounds dem hurting",
+"Enemy pre fi kill mi first him",
+"The grung hot now a bare dirting",
+"Marrow deh a floor like skirting",
+"The mini Glock wid the blue round tin",
+"The mini Glock wid the blue roooound tin",
+"So yo know seh dem get scoooooooooooooooooooooood",
+"We Mek di thing dem woooork",
+"Brawling wi a lock loose ends",
+"So when yo si di ends caaaaaalm",
+"Killaz venom been charge",
+"So any foul play a bay violence",
+"Di Mac 90 a push mileage",
+"Like roof dem head goooooooone",
+"Haffi show dem who in charge",
+"Weh dem did a plan now it exposing",
+"Dem nuh whaa si wi have clothing",
+"Dem nuh whaa si wi",
+"Wi lif it up"
+];
+const HOOK = /thing dem wo/i;
+
+const $ = id => document.getElementById(id);
+const a = $('a'), stage = $('stage'), title = $('title'), endcard = $('endcard'), prog = $('prog');
+const SAVED = (typeof TIMES !== 'undefined' && Array.isArray(TIMES)) ? TIMES.slice() : [];
+let times = SAVED.slice(), mode = 'idle', cur = -2, curEl = null;
+
+$('startNote').textContent = SAVED.length
+  ? `${SAVED.length} of ${LYRICS.length} lines timed.`
+  : 'No timings yet — tap SYNC LYRICS first.';
+title.classList.add('show');
+
+const colors = ['#6e0810', '#6e0810', '#50400f'];
+for (let i = 0; i < 9; i++) {
+  const s = document.createElement('div');
+  const size = 25 + Math.random() * 45;
+  s.className = 'shard';
+  s.style.cssText = `width:${size}vmax;height:${size}vmax;left:${Math.random()*100 - size/2}vw;top:${Math.random()*100 - size/2}vh;background:${colors[i % 3]};animation-duration:${40 + Math.random()*60}s;animation-direction:${i % 2 ? 'reverse' : 'normal'}`;
+  $('shards').appendChild(s);
+}
+
+function esc(s) { return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function clearLine() {
+  if (!curEl) return;
+  const o = curEl;
+  o.classList.remove('in'); o.classList.add('out');
+  setTimeout(() => o.remove(), 450);
+  curEl = null;
+}
+
+function showLine(i, dur) {
+  clearLine();
+  const text = LYRICS[i];
+  const hook = HOOK.test(text);
+  const words = text.split(/\s+/).filter(Boolean);
+  const step = Math.min(0.22, Math.max(0.05, (dur || 3) * 0.55 / words.length));
+  const el = document.createElement('div');
+  el.className = 'line' + (hook ? ' hook' : '');
+  el.innerHTML = '<div class="wrap"><div class="bar"></div><div class="rule t"></div><div class="rule b"></div><div class="text">' +
+    words.map((w, k) => {
+      const d = (0.18 + k * step).toFixed(2);
+      const st = /(\w)\1{2,}/i.test(w) ? ' st' : '';
+      return `<span class="w${st}" style="--d:${d}s">${esc(w)}</span>`;
+    }).join(' ') + '</div></div>';
+  stage.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
+  curEl = el;
+  if (hook) { stage.classList.remove('shake'); void stage.offsetWidth; stage.classList.add('shake'); }
+}
+
+function lineAt(t) {
+  let idx = -1;
+  for (let i = 0; i < times.length && i < LYRICS.length; i++) {
+    if (times[i] <= t) idx = i; else break;
+  }
+  return idx;
+}
+
+function tick() {
+  const t = a.currentTime;
+  if (a.duration) prog.style.width = (t / a.duration * 100) + '%';
+  if (mode === 'play') {
+    let idx = lineAt(t);
+    if (idx >= 0) {
+      const next = times[idx + 1] ?? (a.duration || t + 8);
+      if (t >= Math.min(next, times[idx] + 8)) idx = -3;
+    }
+    if (idx !== cur) {
+      if (idx >= 0) showLine(idx, (times[idx + 1] ?? times[idx] + 4) - times[idx]);
+      else clearLine();
+      cur = idx;
+    }
+    title.classList.toggle('show', idx === -1);
+    const last = times[Math.min(times.length, LYRICS.length) - 1];
+    endcard.classList.toggle('show', a.ended || (times.length >= LYRICS.length && t > last + 8));
+  }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+function play(arr) {
+  times = arr.slice(); mode = 'play'; cur = -2; clearLine();
+  endcard.classList.remove('show');
+  ['start', 'out', 'sync'].forEach(id => $(id).classList.remove('show'));
+  a.currentTime = 0; a.play();
+}
+
+function save() { try { localStorage.setItem('tdw_sync', JSON.stringify(times)); } catch (e) {} }
+
+function updSync() {
+  $('count').textContent = `LINE ${Math.min(times.length + 1, LYRICS.length)} / ${LYRICS.length}`;
+  $('nextTxt').textContent = times.length < LYRICS.length ? LYRICS[times.length] : 'ALL LINES TIMED';
+}
+
+function startSync() {
+  let saved = [];
+  try { saved = JSON.parse(localStorage.getItem('tdw_sync') || '[]'); } catch (e) {}
+  times = [];
+  if (saved.length && saved.length < LYRICS.length && confirm(`Continue syncing from line ${saved.length + 1}?`)) times = saved;
+  mode = 'sync'; clearLine(); title.classList.remove('show');
+  $('start').classList.remove('show'); $('sync').classList.add('show');
+  a.currentTime = times.length ? Math.max(0, times[times.length - 1] - 2) : 0;
+  updSync(); a.play();
+}
+
+function stamp() {
+  if (times.length >= LYRICS.length) return;
+  times.push(+Math.max(0, a.currentTime - 0.15).toFixed(2));
+  save(); showLine(times.length - 1, 2.5); updSync();
+  if (times.length === LYRICS.length) setTimeout(finishSync, 1500);
+}
+
+function undo() {
+  if (!times.length) return;
+  const r = times.pop(); save();
+  a.currentTime = Math.max(0, r - 3); clearLine(); updSync();
+}
+
+function finishSync() {
+  a.pause(); mode = 'idle';
+  $('sync').classList.remove('show');
+  $('outTxt').value = `const TIMES = [${times.join(', ')}];`;
+  $('out').classList.add('show');
+}
+
+$('playBtn').onclick = e => { e.stopPropagation(); play(SAVED); };
+$('syncBtn').onclick = e => { e.stopPropagation(); startSync(); };
+$('undoBtn').onpointerdown = e => e.stopPropagation();
+$('doneBtn').onpointerdown = e => e.stopPropagation();
+$('undoBtn').onclick = e => { e.stopPropagation(); undo(); };
+$('doneBtn').onclick = e => { e.stopPropagation(); finishSync(); };
+$('sync').addEventListener('pointerdown', e => { if (mode === 'sync') stamp(); });
+$('copyBtn').onclick = async () => {
+  const t = $('outTxt');
+  try { await navigator.clipboard.writeText(t.value); $('copyBtn').textContent = 'COPIED ✓'; }
+  catch (e) { t.select(); document.execCommand('copy'); $('copyBtn').textContent = 'COPIED ✓'; }
+};
+$('previewBtn').onclick = () => play(times);
+document.addEventListener('click', e => {
+  if (mode !== 'play' || e.target.tagName === 'BUTTON') return;
+  if (a.paused) { a.play(); $('paused').style.display = 'none'; }
+  else { a.pause(); $('paused').style.display = 'block'; }
+});
+a.addEventListener('ended', () => { clearLine(); endcard.classList.add('show'); });
+</script>
+</body>
+</html>
