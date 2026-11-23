@@ -6,15 +6,15 @@
 <title>Thing Dem Work – Lyric Export</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <style>
-:root{--red:#c81020;--gold:#d4af37;--white:#f5f0e6;--black:#080808;--card:#141414}
+:root{--red:#ff1f3d;--gold:#ffc928;--white:#ffffff;--black:#050505;--card:#141414}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--black);color:var(--white);font-family:Arial,sans-serif;padding:calc(env(safe-area-inset-top,0px) + 20px) 16px calc(env(safe-area-inset-bottom,0px) + 30px)}
 h1{font-family:'Anton',Impact,sans-serif;font-size:34px;letter-spacing:.05em;text-shadow:3px 3px 0 var(--red)}
 h1 span{color:var(--gold)}
-#status{margin:10px 0 20px;font-size:14px;opacity:.85}
+#status{margin:10px 0 20px;font-size:14px;opacity:.9}
 .card{background:var(--card);border-left:5px solid var(--gold);padding:14px;margin-bottom:18px}
 .card h2{font-family:'Anton',Impact,sans-serif;font-size:22px;letter-spacing:.05em;color:var(--gold)}
-.card p{font-size:13px;opacity:.75;margin:4px 0 10px}
+.card p{font-size:13px;opacity:.8;margin:4px 0 10px}
 textarea{width:100%;height:170px;background:#000;color:var(--white);border:1px solid #333;font-family:monospace;font-size:12px;padding:8px}
 .btns{display:flex;gap:10px;margin-top:10px}
 button{flex:1;font-family:'Anton',Impact,sans-serif;font-size:17px;letter-spacing:.08em;padding:12px;border:none;cursor:pointer;background:var(--gold);color:var(--black)}
@@ -26,83 +26,22 @@ button.alt{background:var(--red);color:var(--white)}
 <div id="status"></div>
 <div id="cards"></div>
 
+<script src="lyrics.js"></script>
 <script src="times.js"></script>
 <script>
 const ARTIST = "BAZRAGOD";
 const TITLE = "Thing Dem Work";
 
-const SHEET = [
-"Never fraid fi kill",
-"Never fraid fi shoot youth",
-"Chat dem a chat now a gap dem a gap",
-"One by one dem a drop dem a drop!",
-"Never fraid fi kill",
-"Never fraid fi",
-"",
-"Fi Mek di thing dem wooooork",
-"Brawling wi a lock loose ends",
-"So when yo si di ends caaaaalm",
-"Killaz venom been charge",
-"So any foul play a bay violence",
-"Di Mac 90 a push mileage",
-"Like roof dem head gooooooone",
-"Haffi show dem who in charge",
-"Yeah",
-"",
-"Weh dem did a plan now it exposing",
-"Dem nuh whaa si wi neck frozen",
-"Dem nuh whaa si wi have clothing",
-"Wi lif it up like gal clothing",
-"Yo mumma bawl casket clothing",
-"So yo nuh tuff wid posing",
-"A Mek chat wha yo imposing",
-"Yo skin bun like acid dousing",
-"Yo cyaa touch none a god chosen",
-"Di triangle eagle golden",
-"Suh yo know seh yo get scolded scolded scooooolded",
-"",
-"We Mek di thing dem work",
-"Brawling wi a lock loose ends",
-"So when yo si di ends caaaaaaaalm",
-"Killaz venom been charge",
-"So any foul play a bay violence",
-"Di Mac 90 a push mileage",
-"Like roof dem head goooooooooone",
-"Haffi show dem who in charge",
-"",
-"The Mac 90 scope be searching",
-"Mi split e tripod like curtain",
-"Bwoy dead mi seet mi certain",
-"Mi paranoid the wounds dem hurting",
-"Enemy pre fi kill mi first him",
-"The grung hot now a bare dirting",
-"Marrow deh a floor like skirting",
-"The mini Glock wid the blue round tin",
-"The mini Glock wid the blue roooound tin",
-"So yo know seh dem get scoooooooooooooooooooooood",
-"",
-"We Mek di thing dem woooork",
-"Brawling wi a lock loose ends",
-"So when yo si di ends caaaaaalm",
-"Killaz venom been charge",
-"So any foul play a bay violence",
-"Di Mac 90 a push mileage",
-"Like roof dem head goooooooone",
-"Haffi show dem who in charge",
-"",
-"Weh dem did a plan now it exposing",
-"Dem nuh whaa si wi have clothing",
-"Dem nuh whaa si wi",
-"Wi lif it up"
-];
-
-const LINES = SHEET.filter(l => l !== "");
+const SHEET_LINES = (typeof SHEET !== 'undefined' ? SHEET : []);
+const LINES = SHEET_LINES.filter(l => l.trim() !== "");
 const T = (typeof TIMES !== 'undefined' && Array.isArray(TIMES)) ? TIMES : [];
 const timed = Math.min(T.length, LINES.length);
 
-document.getElementById('status').textContent = timed === LINES.length
-  ? `All ${LINES.length} lines timed ✓`
-  : `${timed} of ${LINES.length} lines timed. Finish SYNC LYRICS on the lyric page for full SRT/LRC files. Plain lyrics work now.`;
+let msg;
+if (timed === LINES.length && T.length === LINES.length) msg = `All ${LINES.length} lines timed ✓`;
+else if (T.length > LINES.length) msg = `times.js has ${T.length} timings but there are ${LINES.length} lines. Re-sync on the lyric page.`;
+else msg = `${timed} of ${LINES.length} lines timed. Finish SYNC LYRICS on the lyric page for full SRT/LRC files. Plain lyrics work now.`;
+document.getElementById('status').textContent = msg;
 
 function endOf(i) {
   const next = T[i + 1];
@@ -148,7 +87,7 @@ function makeLRC() {
 }
 
 function makeTXT() {
-  return `${TITLE} – ${ARTIST}\n\n` + SHEET.join('\n') + `\n\nWritten by ${ARTIST}`;
+  return `${TITLE} – ${ARTIST}\n\n` + SHEET_LINES.join('\n') + `\n\nWritten by ${ARTIST}`;
 }
 
 function makeList() {
