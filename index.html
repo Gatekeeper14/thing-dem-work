@@ -6,29 +6,29 @@
 <title>BAZRAGOD – Thing Dem Work</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <style>
-:root{--red:#c81020;--dred:#6e0810;--gold:#d4af37;--white:#f5f0e6;--black:#080808}
+:root{--red:#ff1f3d;--dred:#b3001b;--gold:#ffc928;--white:#ffffff;--black:#050505}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;background:var(--black);overflow:hidden;font-family:'Anton',Impact,'Arial Black',sans-serif;color:var(--white);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
-#bg{position:fixed;inset:-40px;background:var(--black) url(cover.jpg) center/cover no-repeat;filter:blur(14px) brightness(.25);z-index:0}
+#bg{position:fixed;inset:-30px;background:var(--black) url(cover.jpg.JPG) center/cover no-repeat;filter:blur(6px) brightness(.55) saturate(1.35);z-index:0}
 #shards{position:fixed;inset:0;overflow:hidden;z-index:1}
-.shard{position:absolute;opacity:.5;clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%);animation:spin linear infinite}
+.shard{position:absolute;opacity:.32;clip-path:polygon(50% 0,100% 38%,82% 100%,18% 100%,0 38%);animation:spin linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-#bg{position:fixed;inset:-40px;background:var(--black) url(cover.jpg.JPG) center/cover no-repeat;filter:blur(14px) brightness(.25);z-index:0}
+#stage{position:fixed;inset:0;z-index:2}
 #stage.shake{animation:shake .35s}
 @keyframes shake{0%,100%{transform:none}20%{transform:translate(-1.2vw,.6vh)}40%{transform:translate(1vw,-.8vh)}60%{transform:translate(-.6vw,.4vh)}80%{transform:translate(.4vw,0)}}
 .line{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .wrap{position:relative;padding:4vh 6vw;max-width:92vw}
-.bar{position:absolute;inset:0 -4vw;background:var(--dred);transform:skewX(-14deg) scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.9,.2,1)}
-.rule{position:absolute;height:max(4px,.9vh);width:60%;background:var(--gold);transform:scaleX(0);transition:transform .4s .1s cubic-bezier(.2,.9,.2,1)}
-.rule.t{top:-2.2vh;left:-2vw;transform-origin:left}
-.rule.b{bottom:-2.2vh;right:-2vw;transform-origin:right}
+.bar{position:absolute;inset:0 -4vw;background:linear-gradient(90deg,rgba(179,0,27,.92),rgba(0,0,0,.82) 55%,rgba(179,0,27,.92));transform:skewX(-14deg) scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.2,.9,.2,1);box-shadow:0 0 4vh rgba(255,31,61,.45)}
+.rule{position:absolute;height:max(5px,1vh);width:60%;background:var(--gold);box-shadow:0 0 2vh rgba(255,201,40,.7);transform:scaleX(0);transition:transform .4s .1s cubic-bezier(.2,.9,.2,1)}
+.rule.t{top:-2.4vh;left:-2vw;transform-origin:left}
+.rule.b{bottom:-2.4vh;right:-2vw;transform-origin:right}
 .in .bar{transform:skewX(-14deg) scaleX(1)}
 .in .rule{transform:scaleX(1)}
 .out .bar{transform:skewX(-14deg) translateX(130%);transition:transform .35s ease-in}
 .out .rule{transform:scaleX(0);transition:transform .25s}
 .out .text{opacity:0;transform:translateX(8vw);transition:all .3s ease-in}
-.text{position:relative;text-align:center;font-size:min(9vw,13vh);line-height:1.1;text-transform:uppercase;letter-spacing:.02em}
-.w{display:inline-block;opacity:0;text-shadow:.06em .06em 0 var(--red);animation:drop .32s cubic-bezier(.2,.9,.3,1.3) forwards,flash .6s forwards;animation-delay:var(--d),var(--d)}
+.text{position:relative;text-align:center;font-size:min(9vw,13vh);line-height:1.12;text-transform:uppercase;letter-spacing:.02em}
+.w{display:inline-block;opacity:0;-webkit-text-stroke:.035em #000;paint-order:stroke fill;text-shadow:.07em .07em 0 var(--red),0 0 .4em rgba(255,201,40,.35);animation:drop .32s cubic-bezier(.2,.9,.3,1.3) forwards,flash .6s forwards;animation-delay:var(--d),var(--d)}
 .w.st{animation:drop .32s cubic-bezier(.2,.9,.3,1.3) forwards,flash .6s forwards,stretch 1.4s ease-out forwards;animation-delay:var(--d),var(--d),var(--d)}
 .hook .w{animation-name:drop,flashgold}
 .hook .w.st{animation-name:drop,flashgold,stretch}
@@ -37,24 +37,24 @@ html,body{height:100%;background:var(--black);overflow:hidden;font-family:'Anton
 @keyframes flashgold{0%,35%{color:var(--white)}100%{color:var(--gold)}}
 @keyframes stretch{from{letter-spacing:.02em}to{letter-spacing:.14em}}
 #title,#endcard{position:fixed;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2vh;text-align:center;pointer-events:none}
-#title .artist,#endcard .small{color:var(--gold);font-size:min(6vw,8vh);letter-spacing:.15em;transform:translateX(-60vw);opacity:0;transition:all .8s cubic-bezier(.2,.9,.2,1)}
-#title .name,#endcard .big{font-size:min(11vw,17vh);text-shadow:.06em .06em 0 var(--red);transform:translateX(60vw);opacity:0;transition:all .8s cubic-bezier(.2,.9,.2,1)}
-#title .grule,#endcard .grule{height:max(5px,1vh);width:60vw;background:var(--gold);transform:scaleX(0);transition:transform .9s .2s}
+#title .artist,#endcard .small{color:var(--gold);font-size:min(6vw,8vh);letter-spacing:.15em;-webkit-text-stroke:.03em #000;paint-order:stroke fill;transform:translateX(-60vw);opacity:0;transition:all .8s cubic-bezier(.2,.9,.2,1)}
+#title .name,#endcard .big{font-size:min(11vw,17vh);-webkit-text-stroke:.035em #000;paint-order:stroke fill;text-shadow:.07em .07em 0 var(--red);transform:translateX(60vw);opacity:0;transition:all .8s cubic-bezier(.2,.9,.2,1)}
+#title .grule,#endcard .grule{height:max(6px,1.1vh);width:60vw;background:var(--gold);box-shadow:0 0 2vh rgba(255,201,40,.7);transform:scaleX(0);transition:transform .9s .2s}
 #title.show .artist,#title.show .name,#endcard.show .small,#endcard.show .big{transform:none;opacity:1}
 #title.show .grule,#endcard.show .grule{transform:scaleX(1)}
-#prog{position:fixed;left:0;bottom:0;height:max(4px,.7vh);width:0;background:var(--gold);z-index:4}
+#prog{position:fixed;left:0;bottom:0;height:max(5px,.8vh);width:0;background:var(--gold);z-index:4}
 .overlay{position:fixed;inset:0;z-index:10;display:none;flex-direction:column;align-items:center;justify-content:center;gap:3vh;padding:env(safe-area-inset-top,0px) 6vw env(safe-area-inset-bottom,0px);text-align:center}
 .overlay.show{display:flex}
-#start{background:rgba(8,8,8,.75)}
+#start{background:rgba(5,5,5,.6)}
 button{font-family:inherit;font-size:min(6vw,7vh);letter-spacing:.1em;padding:1.6vh 8vw;border:none;cursor:pointer;color:var(--black);background:var(--gold);transform:skewX(-10deg)}
 button.alt{background:var(--red);color:var(--white)}
-.note{font-family:Arial,sans-serif;font-size:14px;opacity:.8;max-width:520px;line-height:1.4}
+.note{font-family:Arial,sans-serif;font-size:14px;opacity:.9;max-width:520px;line-height:1.4}
 #sync{justify-content:space-between;padding-top:calc(env(safe-area-inset-top,0px) + 3vh);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 3vh)}
-#syncTop{background:rgba(8,8,8,.85);padding:2vh 4vw;border-left:6px solid var(--gold);width:100%}
+#syncTop{background:rgba(5,5,5,.85);padding:2vh 4vw;border-left:6px solid var(--gold);width:100%}
 #count{color:var(--gold);font-size:18px;letter-spacing:.1em}
 #nextTxt{font-size:min(6vw,7vh);margin-top:1vh}
 #syncBtns{display:flex;gap:4vw}
-#out{background:rgba(8,8,8,.95)}
+#out{background:rgba(5,5,5,.95)}
 #outTxt{width:100%;max-width:700px;height:30vh;font-family:monospace;font-size:13px;background:#111;color:var(--white);border:2px solid var(--gold);padding:10px}
 #paused{position:fixed;top:calc(env(safe-area-inset-top,0px) + 2vh);right:4vw;z-index:9;color:var(--gold);letter-spacing:.1em;display:none}
 </style>
@@ -87,67 +87,12 @@ button.alt{background:var(--red);color:var(--white)}
 </div>
 
 <audio id="a" src="song.mp3.mp3" preload="auto"></audio>
+<script src="lyrics.js"></script>
 <script src="times.js"></script>
 <script>
-const LYRICS = [
-"Never fraid fi kill",
-"Never fraid fi shoot youth",
-"Chat dem a chat now a gap dem a gap",
-"One by one dem a drop dem a drop!",
-"Never fraid fi kill",
-"Never fraid fi",
-"Fi Mek di thing dem wooooork",
-"Brawling wi a lock loose ends",
-"So when yo si di ends caaaaalm",
-"Killaz venom been charge",
-"So any foul play a bay violence",
-"Di Mac 90 a push mileage",
-"Like roof dem head gooooooone",
-"Haffi show dem who in charge",
-"Yeah",
-"Weh dem did a plan now it exposing",
-"Dem nuh whaa si wi neck frozen",
-"Dem nuh whaa si wi have clothing",
-"Wi lif it up like gal clothing",
-"Yo mumma bawl casket clothing",
-"So yo nuh tuff wid posing",
-"A Mek chat wha yo imposing",
-"Yo skin bun like acid dousing",
-"Yo cyaa touch none a god chosen",
-"Di triangle eagle golden",
-"Suh yo know seh yo get scolded scolded scooooolded",
-"We Mek di thing dem work",
-"Brawling wi a lock loose ends",
-"So when yo si di ends caaaaaaaalm",
-"Killaz venom been charge",
-"So any foul play a bay violence",
-"Di Mac 90 a push mileage",
-"Like roof dem head goooooooooone",
-"Haffi show dem who in charge",
-"The Mac 90 scope be searching",
-"Mi split e tripod like curtain",
-"Bwoy dead mi seet mi certain",
-"Mi paranoid the wounds dem hurting",
-"Enemy pre fi kill mi first him",
-"The grung hot now a bare dirting",
-"Marrow deh a floor like skirting",
-"The mini Glock wid the blue round tin",
-"The mini Glock wid the blue roooound tin",
-"So yo know seh dem get scoooooooooooooooooooooood",
-"We Mek di thing dem woooork",
-"Brawling wi a lock loose ends",
-"So when yo si di ends caaaaaalm",
-"Killaz venom been charge",
-"So any foul play a bay violence",
-"Di Mac 90 a push mileage",
-"Like roof dem head goooooooone",
-"Haffi show dem who in charge",
-"Weh dem did a plan now it exposing",
-"Dem nuh whaa si wi have clothing",
-"Dem nuh whaa si wi",
-"Wi lif it up"
-];
+const LYRICS = (typeof SHEET !== 'undefined' ? SHEET : []).filter(l => l.trim() !== "");
 const HOOK = /thing dem wo/i;
+const SAVE_KEY = 'tdw_sync_v2';
 
 const $ = id => document.getElementById(id);
 const a = $('a'), stage = $('stage'), title = $('title'), endcard = $('endcard'), prog = $('prog');
@@ -155,11 +100,11 @@ const SAVED = (typeof TIMES !== 'undefined' && Array.isArray(TIMES)) ? TIMES.sli
 let times = SAVED.slice(), mode = 'idle', cur = -2, curEl = null;
 
 $('startNote').textContent = SAVED.length
-  ? `${SAVED.length} of ${LYRICS.length} lines timed.`
+  ? `${Math.min(SAVED.length, LYRICS.length)} of ${LYRICS.length} lines timed.`
   : 'No timings yet — tap SYNC LYRICS first.';
 title.classList.add('show');
 
-const colors = ['#6e0810', '#6e0810', '#50400f'];
+const colors = ['#ff1f3d', '#ffc928', '#b3001b'];
 for (let i = 0; i < 9; i++) {
   const s = document.createElement('div');
   const size = 25 + Math.random() * 45;
@@ -235,7 +180,7 @@ function play(arr) {
   a.currentTime = 0; a.play();
 }
 
-function save() { try { localStorage.setItem('tdw_sync', JSON.stringify(times)); } catch (e) {} }
+function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(times)); } catch (e) {} }
 
 function updSync() {
   $('count').textContent = `LINE ${Math.min(times.length + 1, LYRICS.length)} / ${LYRICS.length}`;
@@ -244,7 +189,7 @@ function updSync() {
 
 function startSync() {
   let saved = [];
-  try { saved = JSON.parse(localStorage.getItem('tdw_sync') || '[]'); } catch (e) {}
+  try { saved = JSON.parse(localStorage.getItem(SAVE_KEY) || '[]'); } catch (e) {}
   times = [];
   if (saved.length && saved.length < LYRICS.length && confirm(`Continue syncing from line ${saved.length + 1}?`)) times = saved;
   mode = 'sync'; clearLine(); title.classList.remove('show');
