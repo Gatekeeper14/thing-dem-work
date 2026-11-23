@@ -1,0 +1,48 @@
+name: Render Lyric Video 4K
+
+on:
+  workflow_dispatch:
+    inputs:
+      format:
+        description: "landscape = YouTube, vertical = TikTok/Reels"
+        required: true
+        default: landscape
+        type: choice
+        options:
+          - landscape
+          - vertical
+      test_seconds:
+        description: "Seconds to render for a test (leave blank for full song)"
+        required: false
+        default: ""
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ffmpeg and fonts
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+
+      - name: Get Anton font
+        run: curl -fsSL -o font.ttf https://github.com/google/fonts/raw/main/ofl/anton/Anton-Regular.ttf || echo "Font download failed, using default"
+
+      - name: Install Python packages
+        run: pip install -r requirements.txt
+
+      - name: Render video
+        env:
+          FORMAT: ${{ inputs.format }}
+          TEST_SECONDS: ${{ inputs.test_seconds }}
+        run: python render.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: thing-dem-work-${{ inputs.format }}
+          path: thing_dem_work_4k_*.mp4
